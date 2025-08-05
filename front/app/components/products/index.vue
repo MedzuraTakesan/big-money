@@ -5,7 +5,7 @@
         v-for="(product, index) in getProducts"
         :key="index"
     >
-      <img class="products-card__img" :src="product.cardImg">
+      <img v-if="product.cardImg" class="products-card__img" :src="product.cardImg" alt="">
       <p class="products-card__marketplace">{{ product.marketplace }}</p>
       <p class="products-card__name">{{ product.name }}</p>
       <div>
@@ -14,7 +14,11 @@
       <div>
         <del class="products-card__price">{{ product.price }}</del>
       </div>
-      <a :href="product.cardLink"> товар в {{ product.marketplace}} </a>
+      <a
+          :href="product.cardLink"
+          target="_blank"
+          rel="noopener noreferrer"
+      > товар в {{ product.marketplace}} </a>
     </div>
   </div>
 </template>
@@ -40,6 +44,9 @@ const { getProducts } = storeToRefs(searchStore)
   background-color: #fff;
 }
 .products-card__img {
+  max-width: 200px;
+}
+.products-card__name {
   max-width: 200px;
 }
 </style>

@@ -18,7 +18,6 @@ export const useSearchStore = defineStore('searchStore', {
                         search
                     }
                 });
-                console.log(response)
 
                 this.products = response;
             } finally {
