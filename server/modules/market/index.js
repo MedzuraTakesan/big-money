@@ -9,12 +9,31 @@ const getProductsFromName = async (productName) => {
 
     const results = await Promise.allSettled(promises);
 
-    // Фильтруем только успешные промисы и возвращаем их значения
-    return results
+    const allProducts = results
         .filter(result => result.status === 'fulfilled')
         .map(result => result.value)
-        .flat()
-        .sort((a, b) => a.sale - b.sale)
+        .flat();
+
+    // Разделяем на товары Ozon и Wildberries
+    const ozonProducts = allProducts.filter(p => p.marketplace === 'ozon');
+    const wbProducts = allProducts.filter(p => p.marketplace === 'wildberries');
+
+    // Чередуем товары
+    const mixed = [];
+    let i = 0, j = 0;
+
+    while (i < ozonProducts.length || j < wbProducts.length) {
+        if (i < ozonProducts.length) {
+            mixed.push(ozonProducts[i]);
+            i++;
+        }
+        if (j < wbProducts.length) {
+            mixed.push(wbProducts[j]);
+            j++;
+        }
+    }
+
+    return mixed;
 };
 
 module.exports = {
