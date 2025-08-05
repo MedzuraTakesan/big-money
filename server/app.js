@@ -1,17 +1,24 @@
 const market = require('./modules/market/index.js')
+const express = require('express');
+const app = express();
+app.use(express.json())
 
+const getProducts = async (request, response) => {
+    const search = request.query.search;
 
-const getProducts = async (productName) => {
-    const products = await market.getProductsFromName(productName)
+    if (!search) {
+        response.json([])
+    }
 
-    return products
+    const products = await market.getProductsFromName(search)
+
+    response.json(products)
 }
 
 
-const test = async (text) => {
-    const result = await getProducts(text)
 
-    console.log(result)
-}
+app.get('/get-products', getProducts);
 
-test('airpods pro')
+app.listen(3005, () => {
+    console.log('Server started on port 3000');
+});

@@ -1,11 +1,11 @@
 const puppeteer = require('puppeteer-extra');
 const { Parser } = require('../helpers/parser/index.js');
-const { ozon } = require('../helpers/parser/constants.js');
+const { wildberries } = require('../helpers/parser/constants.js');
 
 const parser = new Parser({
-    domain: ozon.domain,
-    waitUntil: ozon.waitUntil,
-    cookie: ozon.cookie
+    domain: wildberries.domain,
+    cookie: wildberries.cookie,
+    waitUntil: wildberries.waitUntil
 });
 
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
@@ -13,19 +13,19 @@ const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 puppeteer.use(StealthPlugin());
 
 async function searchText(productName) {
-    const url = `https://www.ozon.ru/search/?text=${encodeURIComponent(productName)}`
+    const url = `https://www.wildberries.ru/catalog/0/search.aspx?search=${encodeURIComponent(productName)}`
     const selector = {
-        block: '.tile-root',
+        block: '.product-card',
         selectors: {
-            sale: '.tsHeadline500Medium',
-            price: '.c35_3_1-b',
-            name: '.tsBody500Medium'
+            sale: 'span>ins',
+            price: 'span>del',
+            name: '.product-card__name'
         },
         links: {
-            cardLink: 'a.tile-clickable-element'
+            cardLink: '.product-card__link'
         },
         imgs: {
-            cardImg: '.tile-clickable-element img'
+            cardImg: '.product-card__img-wrap > img'
         }
     }
     const startTime =  Date.now();

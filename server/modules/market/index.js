@@ -1,11 +1,22 @@
-const ozon = require('./ozon/index.js')
+const ozon = require('./ozon/index.js');
+const wildberries = require('./wildberries/index.js');
 
 const getProductsFromName = async (productName) => {
-    const responseFromOzon = await ozon.search(productName)
+    const promises = [
+        ozon.search(productName),
+        wildberries.search(productName)
+    ];
 
-    return responseFromOzon
-}
+    const results = await Promise.allSettled(promises);
+
+    // Фильтруем только успешные промисы и возвращаем их значения
+    return results
+        .filter(result => result.status === 'fulfilled')
+        .map(result => result.value)
+        .flat()
+        .sort((a, b) => a.sale - b.sale)
+};
 
 module.exports = {
     getProductsFromName
-}
+};

@@ -6,7 +6,7 @@ const search = async (productName) => {
         const response = await searchText(productName)
         return response.map(element => ({
             ...element,
-            marketplace: 'ozon',
+            marketplace: 'wildberries',
             name: element.name.replace('/', '').trim(),
             price: priceToNumber(element.price),
             sale: priceToNumber(element.sale)
