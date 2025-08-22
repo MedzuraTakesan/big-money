@@ -8,6 +8,9 @@
       <img v-if="product.cardImg" class="products-card__img" :src="product.cardImg" alt="">
       <p class="products-card__marketplace">{{ product.marketplace }}</p>
       <p class="products-card__name">{{ product.name }}</p>
+      <div class="products-card__reviews">
+        <span class="reviews-count">Отзывов: {{ product.reviewsCount || 0 }}</span>
+      </div>
       <div>
         <ins class="products-card__sale">{{ product.sale }}</ins>
       </div>
@@ -48,5 +51,15 @@ const { getProducts } = storeToRefs(searchStore)
 }
 .products-card__name {
   max-width: 200px;
+}
+.products-card__reviews {
+  margin: 5px 0;
+}
+.reviews-count {
+  font-size: 12px;
+  color: #666;
+  background-color: #f5f5f5;
+  padding: 2px 6px;
+  border-radius: 4px;
 }
 </style>

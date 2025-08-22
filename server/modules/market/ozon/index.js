@@ -1,21 +1,15 @@
 const { searchText } = require("./api.js")
-const { priceToNumber } = require('../helpers/data/formatting.js')
+const { processProducts } = require('../helpers/data/formatting.js')
 
 const search = async (productName) => {
     try {
         const response = await searchText(productName)
-        return response.map(element => ({
-            ...element,
-            marketplace: 'ozon',
-            name: element.name.replace('/', '').trim(),
-            price: priceToNumber(element.price),
-            sale: priceToNumber(element.sale)
-        }))
+        return processProducts(response, 'ozon');
     } catch (error) {
         console.error(error)
+        return [];
     }
 }
-
 
 module.exports = {
     search

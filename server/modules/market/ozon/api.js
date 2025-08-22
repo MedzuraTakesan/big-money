@@ -1,6 +1,6 @@
-const puppeteer = require('puppeteer-extra');
 const { Parser } = require('../helpers/parser/index.js');
 const { ozon } = require('../helpers/parser/constants.js');
+const { optimizedSearch } = require('../helpers/parser/optimizations.js');
 
 const parser = new Parser({
     domain: ozon.domain,
@@ -8,39 +8,10 @@ const parser = new Parser({
     cookie: ozon.cookie
 });
 
-const StealthPlugin = require('puppeteer-extra-plugin-stealth');
-
-puppeteer.use(StealthPlugin());
-
 async function searchText(productName) {
-    const url = `https://www.ozon.ru/search/?text=${encodeURIComponent(productName)}`
-    const selector = {
-        block: '.tile-root',
-        selectors: {
-            sale: '.tsHeadline500Medium',
-            price: '.c35_3_1-b',
-            name: '.tsBody500Medium'
-        },
-        links: {
-            cardLink: 'a.tile-clickable-element'
-        },
-        imgs: {
-            cardImg: '.tile-clickable-element img'
-        }
-    }
-    const startTime =  Date.now();
-
-    const products = await parser.getTextFromSelector({
-        url,
-        selector
-    });
-
-    const endTime =  Date.now();
-
-    console.log(`Время выполнения - ${endTime - startTime}ms`);
-
-
-    return products;
+    const url = `https://www.ozon.ru/search/?text=${encodeURIComponent(productName)}`;
+    
+    return await optimizedSearch(parser, url, 'ozon', productName);
 }
 
 module.exports = {

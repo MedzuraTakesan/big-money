@@ -9,13 +9,14 @@ export const useSearchStore = defineStore('searchStore', {
         }
     },
     actions: {
-        async fetchProducts(search: string) {
+        async fetchProducts(search: string, sortBy: string = 'reviews') {
             this.loading = true;
             try {
                 const response = await $fetch('/api/get-products', {
                     method: 'get',
                     query: {
-                        search
+                        search,
+                        sortBy
                     }
                 });
 
