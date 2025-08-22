@@ -26,6 +26,14 @@
         >
           Перейти к товару в {{ product.marketplace }}
         </a>
+        
+        <button
+          @click="showReviews"
+          class="product-card__reviews-btn"
+          :disabled="!isReviewsSupported"
+        >
+          Получить отзывы
+        </button>
       </div>
     </div>
     
@@ -55,7 +63,10 @@ interface Props {
   product: Product;
 }
 
+import { useReviewsStore } from '~/stores/reviews'
+
 const props = defineProps<Props>();
+const reviewsStore = useReviewsStore()
 
 const cardStyle = computed(() => {
   if (props.product.cardImg) {
@@ -68,6 +79,14 @@ const cardStyle = computed(() => {
   }
   return {};
 });
+
+const isReviewsSupported = computed(() => {
+  return reviewsStore.isReviewsSupported(props.product.cardLink);
+});
+
+const showReviews = () => {
+  reviewsStore.openReviewsModal(props.product.cardLink);
+};
 
 const getMarketplaceBadge = (marketplace: string) => {
   if (marketplace.toLowerCase().includes('xiaomi')) {

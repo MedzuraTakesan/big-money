@@ -11,15 +11,18 @@
         :product="product"
       />
     </div>
+    
+    <ReviewsModal />
   </div>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { useSearchStore} from "~/stores/search";
-import LoadingSpinner from '../LoadingSpinner/index.vue';
+import LoadingSpinner from '~/components/LoadingSpinner/index.vue';
 import ProductCard from './ProductCard/index.vue';
 import EmptyState from './EmptyState/index.vue';
+import ReviewsModal from '../ReviewsModal/index.vue';
 
 const searchStore = useSearchStore()
 const { getProducts } = storeToRefs(searchStore)

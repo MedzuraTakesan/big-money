@@ -63,7 +63,7 @@ class BrowserManager {
 
     async createBrowser() {
         const browser = await puppeteer.launch({
-            headless: true, // Headless режим
+            headless: false, // Headless режим
             slowMo: 50, // Уменьшено для ускорения
             args: [
                 '--no-sandbox', 

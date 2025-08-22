@@ -6,7 +6,8 @@ const SERVER_CONFIG = {
 
 // API endpoints
 const API_ENDPOINTS = {
-    GET_PRODUCTS: '/get-products'
+    GET_PRODUCTS: '/get-products',
+    GET_REVIEWS: '/get-reviews'
 };
 
 module.exports = {
