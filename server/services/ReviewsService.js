@@ -6,6 +6,61 @@ class ReviewsService {
     }
 
     /**
+     * Выполняет плавный скролл страницы, имитирующий прокрутку колесиком мыши
+     * @param {Page} page - объект страницы Puppeteer
+     * @param {number} targetRatio - целевая позиция скролла (0.0 - 1.0)
+     * @param {number} duration - продолжительность скролла в миллисекундах
+     */
+    async smoothScroll(page, targetRatio, duration = 2000) {
+        await page.evaluate((targetRatio, duration) => {
+            return new Promise((resolve) => {
+                const startTime = Date.now();
+                const startScrollTop = window.pageYOffset;
+                const documentHeight = document.body.scrollHeight;
+                const targetScrollTop = documentHeight * targetRatio;
+                const distance = targetScrollTop - startScrollTop;
+                
+                // Более реалистичная функция плавности с небольшими паузами
+                function easeInOutCubic(t) {
+                    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+                }
+                
+                // Добавляем небольшие случайные паузы для реалистичности
+                function getRandomDelay() {
+                    return Math.random() * 50 + 10; // 10-60ms случайная задержка
+                }
+                
+                function scroll() {
+                    const elapsed = Date.now() - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const easedProgress = easeInOutCubic(progress);
+                    
+                    const currentScrollTop = startScrollTop + (distance * easedProgress);
+                    window.scrollTo(0, currentScrollTop);
+                    
+                    // Триггерим события скролла для ленивой загрузки
+                    const scrollEvent = new Event('scroll', { bubbles: true });
+                    window.dispatchEvent(scrollEvent);
+                    
+                    if (progress < 1) {
+                        // Добавляем случайную задержку для имитации человеческого поведения
+                        setTimeout(() => {
+                            requestAnimationFrame(scroll);
+                        }, getRandomDelay());
+                    } else {
+                        resolve();
+                    }
+                }
+                
+                scroll();
+            });
+        }, targetRatio, duration);
+        
+        // Дополнительная задержка для стабильности
+        await new Promise(resolve => setTimeout(resolve, 300));
+    }
+
+    /**
      * Определяет маркетплейс по URL
      * @param {string} url - URL товара
      * @returns {string} название маркетплейса
@@ -113,11 +168,50 @@ class ReviewsService {
             console.log(`📄 Заголовок страницы: ${pageTitle}`);
             console.log(`🔗 Текущий URL: ${currentUrl}`);
             
-            // Дополнительная прокрутка для загрузки ленивого контента
-            await page.evaluate(() => {
-                window.scrollTo(0, document.body.scrollHeight * 0.3);
-            });
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            // Цикл плавного скроллинга для загрузки отзывов Wildberries
+            console.log('🔄 Начинаем подгрузку отзывов Wildberries...');
+            
+            const maxScrollAttempts = 4;
+            let scrollAttempt = 0;
+            let previousReviewCount = 0;
+            
+            while (scrollAttempt < maxScrollAttempts) {
+                // Плавный скролл на определенную позицию
+                const scrollRatio = 0.2 + (scrollAttempt * 0.2); // Постепенно увеличиваем позицию
+                await this.smoothScroll(page, Math.min(scrollRatio, 1.0), 2000);
+                
+                // Проверяем количество загруженных отзывов
+                const currentReviewCount = await page.evaluate(() => {
+                    const selectors = [
+                        '.comments__item.feedback',
+                        '.feedback',
+                        '[class*="feedback"]',
+                        'li[class*="comments"]'
+                    ];
+                    
+                    for (const selector of selectors) {
+                        const elements = document.querySelectorAll(selector);
+                        if (elements.length > 0) {
+                            return elements.length;
+                        }
+                    }
+                    return 0;
+                });
+                
+                console.log(`📊 Попытка ${scrollAttempt + 1}: найдено ${currentReviewCount} отзывов Wildberries`);
+                
+                // Если количество отзывов не изменилось и у нас уже есть отзывы, прекращаем
+                if (currentReviewCount === previousReviewCount && currentReviewCount > 0) {
+                    console.log('✅ Количество отзывов Wildberries стабилизировалось, прекращаем скролл');
+                    break;
+                }
+                
+                previousReviewCount = currentReviewCount;
+                scrollAttempt++;
+                
+                // Небольшая пауза между скроллами
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
             
             // Проверяем наличие элементов на странице
             const bodyText = await page.evaluate(() => document.body.innerText);
@@ -151,26 +245,9 @@ class ReviewsService {
                     if (index >= 32) return; // Максимум 32 отзыва
                     
                     try {
-                        let author = 'Аноним';
+                        let author = `Автор ${index + 1}`;
                         let text = '';
                         let rating = 0;
-                        
-                        // Попытки получить имя автора
-                        const authorSelectors = [
-                            '.feedback__header',
-                            '[class*="header"]',
-                            '[class*="author"]',
-                            '[class*="name"]',
-                            '.feedback__author'
-                        ];
-                        
-                        for (const selector of authorSelectors) {
-                            const authorElement = element.querySelector(selector);
-                            if (authorElement && authorElement.textContent.trim()) {
-                                author = authorElement.textContent.trim();
-                                break;
-                            }
-                        }
                         
                         // Попытки получить текст отзыва
                         const textSelectors = [
@@ -352,20 +429,52 @@ class ReviewsService {
             await page.mouse.wheel({ deltaY: 100 });
             await new Promise(resolve => setTimeout(resolve, 500));
             
-            // Используем простой скролл как в парсинге товаров
+            // Используем цикл плавного скроллинга для загрузки отзывов
             console.log('🔄 Начинаем подгрузку отзывов...');
             
-            // Простой скролл вниз для загрузки отзывов
-            await page.evaluate(() => {
-                window.scrollTo(0, document.body.scrollHeight * 0.8);
-            });
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            // Цикл плавного скроллинга для загрузки всех отзывов
+            const maxScrollAttempts = 5;
+            let scrollAttempt = 0;
+            let previousReviewCount = 0;
             
-            // Еще один скролл для полной загрузки
-            await page.evaluate(() => {
-                window.scrollTo(0, document.body.scrollHeight);
-            });
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            while (scrollAttempt < maxScrollAttempts) {
+                // Плавный скролл на определенную позицию
+                const scrollRatio = 0.3 + (scrollAttempt * 0.15); // Постепенно увеличиваем позицию
+                await this.smoothScroll(page, Math.min(scrollRatio, 1.0), 2000);
+                
+                // Проверяем количество загруженных отзывов
+                const currentReviewCount = await page.evaluate(() => {
+                    const selectors = [
+                        '[data-review-uuid]',
+                        '.x2p_30',
+                        '[class*="review"]',
+                        'div[class*="vo7"]',
+                        '[class*="feedback"]'
+                    ];
+                    
+                    for (const selector of selectors) {
+                        const elements = document.querySelectorAll(selector);
+                        if (elements.length > 0) {
+                            return elements.length;
+                        }
+                    }
+                    return 0;
+                });
+                
+                console.log(`📊 Попытка ${scrollAttempt + 1}: найдено ${currentReviewCount} отзывов`);
+                
+                // Если количество отзывов не изменилось и у нас уже есть отзывы, прекращаем
+                if (currentReviewCount === previousReviewCount && currentReviewCount > 0) {
+                    console.log('✅ Количество отзывов стабилизировалось, прекращаем скролл');
+                    break;
+                }
+                
+                previousReviewCount = currentReviewCount;
+                scrollAttempt++;
+                
+                // Небольшая пауза между скроллами
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
             
             // Проверяем, не заблокировали ли нас
             const bodyText = await page.evaluate(() => document.body.innerText);
@@ -389,7 +498,7 @@ class ReviewsService {
                 
                 // Попытка 2: альтернативные селекторы
                 if (reviewElements.length === 0) {
-                    reviewElements = document.querySelectorAll('.vo7_30');
+                    reviewElements = document.querySelectorAll('.x2p_30');
                 }
                 
                 // Попытка 3: поиск по классам, содержащим "review"
@@ -413,26 +522,9 @@ class ReviewsService {
                     if (index >= 32) return; // Максимум 32 отзыва
                     
                     try {
-                        let author = 'Аноним';
+                        let author = `Автор ${index + 1}`;
                         let text = '';
                         let rating = 0;
-                        
-                        // Попытки получить имя автора
-                        const authorSelectors = [
-                            '.s2o_30',
-                            '[class*="author"]',
-                            '[class*="name"]',
-                            'span[class*="s2"]',
-                            '.feedback__author'
-                        ];
-                        
-                        for (const selector of authorSelectors) {
-                            const authorElement = element.querySelector(selector);
-                            if (authorElement && authorElement.textContent.trim()) {
-                                author = authorElement.textContent.trim();
-                                break;
-                            }
-                        }
                         
                         // Попытки получить текст отзыва
                         const textSelectors = [
