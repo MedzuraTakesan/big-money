@@ -20,5 +20,5 @@ withDefaults(defineProps<Props>(), {
 </script>
 
 <style lang="scss" scoped>
-@use './LoadingSpinner/styles.scss';
+@use './styles.scss';
 </style>

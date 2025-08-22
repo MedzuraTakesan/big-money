@@ -59,6 +59,8 @@ const clearCache = () => {
     performanceService.clearCache();
 };
 
+
+
 module.exports = {
     getProductsFromName,
     getProductsFromNameSequential,

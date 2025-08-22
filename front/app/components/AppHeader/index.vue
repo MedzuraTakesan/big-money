@@ -14,5 +14,5 @@
 </script>
 
 <style lang="scss" scoped>
-@use '../app.styles.scss';
+@use './styles.scss';
 </style>

@@ -8,6 +8,9 @@
       
       <div class="search-controls">
         <SortSelect v-model="sortBy" />
+        
+
+        
         <SearchButton @click="fetchProducts" />
       </div>
     </div>
@@ -17,9 +20,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useSearchStore } from "~/stores/search";
-import SearchInput from './SearchInput.vue';
-import SortSelect from './SortSelect.vue';
-import SearchButton from './SearchButton.vue';
+import SearchInput from './SearchInput/index.vue';
+import SortSelect from './SortSelect/index.vue';
+import SearchButton from './SearchButton/index.vue';
 
 const searchText = ref('')
 const sortBy = ref('reviews')

@@ -13,5 +13,5 @@ import products from '@/components/products/index.vue'
 </script>
 
 <style lang="scss" scoped>
-@use '../app.styles.scss';
+@use './styles.scss';
 </style>

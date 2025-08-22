@@ -40,6 +40,8 @@ export const useSearchStore = defineStore('searchStore', {
             } finally {
                 this.loading = false;
             }
-        }
+        },
+
+
     }
 })

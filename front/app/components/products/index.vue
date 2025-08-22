@@ -17,9 +17,9 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { useSearchStore} from "~/stores/search";
-import LoadingSpinner from '../LoadingSpinner.vue';
-import ProductCard from './ProductCard.vue';
-import EmptyState from './EmptyState.vue';
+import LoadingSpinner from '../LoadingSpinner/index.vue';
+import ProductCard from './ProductCard/index.vue';
+import EmptyState from './EmptyState/index.vue';
 
 const searchStore = useSearchStore()
 const { getProducts } = storeToRefs(searchStore)

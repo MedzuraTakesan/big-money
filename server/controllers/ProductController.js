@@ -25,6 +25,8 @@ class ProductController {
         }
     }
 
+
+
     /**
      * Извлекает параметры из query string
      * @param {Object} request - объект запроса
@@ -36,6 +38,8 @@ class ProductController {
             sortBy: request.query.sortBy || DEFAULTS.SORT_BY
         };
     }
+
+
 
     /**
      * Проверяет валидность поискового запроса

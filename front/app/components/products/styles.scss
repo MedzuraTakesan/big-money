@@ -2,196 +2,17 @@
   min-height: 400px;
 }
 
-.empty-state {
-  text-align: center;
-  padding: 4rem 2rem;
-  color: #6b7280;
-}
-
-.empty-state__icon {
-  margin-bottom: 1rem;
-}
-
-.empty-state__title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin: 0 0 0.5rem 0;
-  color: #374151;
-}
-
-.empty-state__text {
-  font-size: 1rem;
-  margin: 0;
-  opacity: 0.8;
-}
-
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
   padding: 1rem 0;
 }
 
-.product-card {
-  background: white;
-  border-radius: 16px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-  }
-}
-
-.product-card__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 1rem;
-}
-
-.marketplace-badge {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  font-size: 0.7rem;
-  font-weight: 600;
-  padding: 0.25rem 0.5rem;
-  border-radius: 6px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.product-card__category {
-  font-size: 0.7rem;
-  color: #6b7280;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  background: #f3f4f6;
-  padding: 0.25rem 0.5rem;
-  border-radius: 6px;
-}
-
-.product-card__image {
-  text-align: center;
-  margin-bottom: 1rem;
-  position: relative;
-}
-
-.product-image {
-  width: 140px;
-  height: 140px;
-  object-fit: contain;
-  border-radius: 12px;
-  background: #f9fafb;
-  padding: 1rem;
-  transition: transform 0.2s ease;
-  
-  &:hover {
-    transform: scale(1.05);
-  }
-}
-
-.product-image-placeholder {
-  width: 140px;
-  height: 140px;
-  border-radius: 12px;
-  background: #f9fafb;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
-  border: 2px dashed #d1d5db;
-}
-
-.product-card__name {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #111827;
-  margin: 0 0 0.75rem 0;
-  line-height: 1.4;
-  flex-grow: 1;
-}
-
-.product-card__description {
-  font-size: 0.85rem;
-  color: #6b7280;
-  line-height: 1.4;
-  margin-bottom: 1rem;
-  flex-grow: 1;
-}
-
-.product-card__reviews {
-  margin-bottom: 1rem;
-}
-
-.reviews-count {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  font-size: 0.8rem;
-  color: #6b7280;
-  background: #f3f4f6;
-  padding: 0.25rem 0.5rem;
-  border-radius: 6px;
-}
-
-.reviews-icon {
-  font-size: 0.7rem;
-}
-
-.product-card__pricing {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-  flex-wrap: wrap;
-}
-
-.current-price {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: #2563eb;
-}
-
-.original-price {
-  font-size: 0.9rem;
-  color: #9ca3af;
-  text-decoration: line-through;
-}
-
-.discount-badge {
-  background: #dc2626;
-  color: white;
-  font-size: 0.7rem;
-  font-weight: 600;
-  padding: 0.25rem 0.5rem;
-  border-radius: 6px;
-}
-
-.product-card__link {
-  display: block;
-  text-align: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  text-decoration: none;
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  transition: all 0.2s ease;
-  margin-top: auto;
-  
-  &:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+@media (max-width: 1200px) {
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
   }
 }
 
@@ -199,25 +20,5 @@
   .products-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
-  }
-  
-  .product-card {
-    padding: 1rem;
-  }
-  
-  .product-card__header {
-    flex-direction: column;
-    gap: 0.5rem;
-    align-items: flex-start;
-  }
-  
-  .product-image,
-  .product-image-placeholder {
-    width: 120px;
-    height: 120px;
-  }
-  
-  .current-price {
-    font-size: 1.2rem;
   }
 }

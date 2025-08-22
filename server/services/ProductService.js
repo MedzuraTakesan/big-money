@@ -132,6 +132,8 @@ class ProductService {
             return groups;
         }, {});
     }
+
+
 }
 
 module.exports = ProductService;

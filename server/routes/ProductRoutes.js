@@ -16,6 +16,8 @@ class ProductRoutes {
             productController.getProducts(req, res);
         });
 
+
+
         return router;
     }
 }

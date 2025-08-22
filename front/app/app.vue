@@ -6,10 +6,10 @@
 </template>
 
 <script setup lang="ts">
-import AppHeader from '@/components/AppHeader.vue'
-import AppMain from '@/components/AppMain.vue'
+import AppHeader from '@/components/AppHeader/index.vue'
+import AppMain from '@/components/AppMain/index.vue'
 </script>
 
 <style lang="scss" scoped>
-@use './app.styles.scss';
+@use './styles.scss';
 </style>
