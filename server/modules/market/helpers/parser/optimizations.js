@@ -6,7 +6,7 @@ const optimizedSelectors = {
         block: '.tile-root',
         selectors: {
             sale: '.tsHeadline500Medium',
-            price: '.c35_3_1-b',
+            price: 'span[style*="margin-left:4px"]',
             name: '.tsBody500Medium',
             reviews: 'span[style*="color:var(--textSecondary)"]'
         },

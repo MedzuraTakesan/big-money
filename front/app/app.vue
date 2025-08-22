@@ -1,18 +1,15 @@
 <template>
   <div class="app">
-    <search />
-    <products />
+    <AppHeader />
+    <AppMain />
   </div>
 </template>
 
 <script setup lang="ts">
-import search from '@/components/search/index.vue'
-import products from '@/components/products/index.vue'
-
+import AppHeader from '@/components/AppHeader.vue'
+import AppMain from '@/components/AppMain.vue'
 </script>
 
 <style lang="scss" scoped>
-.app {
-  background-color: #f5f7fa;
-}
+@use './app.styles.scss';
 </style>

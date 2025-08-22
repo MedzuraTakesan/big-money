@@ -1,25 +1,16 @@
-const market = require('./modules/market/index.js')
-const express = require('express');
-const app = express();
-app.use(express.json())
+// Загружаем переменные окружения из .env файла
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 
-const getProducts = async (request, response) => {
-    const search = request.query.search;
-    const sortBy = request.query.sortBy || 'reviews'; // reviews, price, name
+// Отладочная информация
+console.log('Environment variables:');
+console.log('PORT:', process.env.PORT);
+console.log('HOST:', process.env.HOST);
+console.log('Current directory:', __dirname);
+console.log('Env file path:', path.join(__dirname, '.env'));
 
-    if (!search) {
-        response.json([])
-    }
+const App = require('./app/App');
 
-    const products = await market.getProductsFromName(search, sortBy)
-
-    response.json(products)
-}
-
-
-
-app.get('/get-products', getProducts);
-
-app.listen(3005, () => {
-    console.log('Server started on port 3000');
-});
+// Создаем и запускаем приложение
+const app = new App();
+app.start();
